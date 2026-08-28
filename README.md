@@ -1,6 +1,7 @@
 # Dossel — Monitoramento por Satélite da Amazônia
 
-Painel web que cruza focos de calor (NASA FIRMS), desmatamento (INPE/PRODES) e clima/hidrologia (Open-Meteo) da Amazônia Legal em tempo real. Construído em **TypeScript + Vite**, sem framework de UI — só o necessário para ter tipagem, módulos organizados e um build otimizado para hospedagem estática.
+Painel web que cruza focos de calor (NASA FIRMS), desmatamento (INPE/PRODES) e clima/hidrologia (Open-Meteo) da Amazônia Legal em tempo real. Construído em **TypeScript + Vite**, sem framework de UI — só o necessário para ter tipagem, módulos organizados e um build otimizado para hospedagem estática..
+
 
 ## Stack
 
