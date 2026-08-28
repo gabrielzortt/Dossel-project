@@ -1,0 +1,110 @@
+.btn{
+  font-family:var(--font-body); font-weight:600; font-size:14px;
+  padding:12px 20px; border-radius:100px; border:1px solid transparent;
+  cursor:pointer; transition: transform .15s var(--ease), background .2s, border-color .2s;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn:active{ transform:scale(.97); }
+.btn-primary{ background:var(--leaf); color:#0A140F; }
+.btn-primary:hover{ background:#72cf9c; }
+.btn-ghost{ background:transparent; border-color:var(--panel-border); color:var(--text); }
+.btn-ghost:hover{ border-color:var(--leaf); color:var(--leaf); }
+
+.panel{
+  background: var(--panel);
+  border:1px solid var(--panel-border);
+  border-radius: var(--radius-l);
+  padding:24px;
+}
+.panel-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap; }
+.panel-title{ font-family:var(--font-display); font-size:19px; font-weight:600; }
+
+.pill-select{
+  background: var(--bg-elevated); border:1px solid var(--panel-border); color:var(--text);
+  font-family:var(--font-body); font-size:13px; padding:8px 14px; border-radius:100px;
+  cursor:pointer; appearance:none;
+}
+.field-key{
+  background: var(--bg-elevated); border:1px solid var(--panel-border); color:var(--text);
+  font-family:var(--font-mono); font-size:12px; padding:8px 12px; border-radius:8px; width:200px;
+}
+.field-key::placeholder{ color:var(--text-faint); }
+
+/* ---------- RISK GAUGE (signature element) ---------- */
+.gauge-wrap{ display:flex; align-items:center; gap:18px; }
+.gauge-wrap svg{ overflow:visible; }
+.gauge-label{ font-size:12.5px; color:var(--text-dim); }
+.gauge-value{ font-family:var(--font-mono); font-size:26px; font-weight:600; }
+
+#yoyCompare{
+  font-size:12.5px; color:var(--text-dim); line-height:1.6;
+  padding-top:2px;
+}
+
+/* ---------- FOGO / MAP ---------- */
+.fire-grid{ display:grid; grid-template-columns:1.5fr 1fr; gap:20px; }
+#firemap{ height:440px; border-radius: var(--radius-m); overflow:hidden; border:1px solid var(--panel-border); background:#0d1712; }
+.leaflet-container{ background:#0d1712 !important; font-family:var(--font-body); }
+.stat-stack{ display:flex; flex-direction:column; gap:14px; }
+.stat-box{ background:var(--bg-elevated); border:1px solid var(--panel-border); border-radius:var(--radius-m); padding:18px; }
+.stat-box .num{ font-size:30px; font-weight:600; }
+.stat-box .lbl{ font-size:12.5px; color:var(--text-dim); margin-top:4px; }
+.key-setup{
+  margin-top:16px; padding:14px 16px; border-radius:var(--radius-m);
+  background: linear-gradient(160deg, var(--fire-dim), transparent 130%);
+  border:1px solid rgba(255,106,57,.25); font-size:13px; color:var(--text-dim); line-height:1.6;
+}
+.key-setup a{ color:var(--amber); text-decoration:underline; text-underline-offset:2px; }
+.key-row{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+
+@media (max-width:900px){ .fire-grid{ grid-template-columns:1fr; } #firemap{ height:320px; } }
+
+/* ---------- DESMATAMENTO ---------- */
+.defor-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+#deforChart{ width:100%; height:280px; }
+.legend-row{ display:flex; gap:18px; margin-top:12px; flex-wrap:wrap; }
+.legend-item{ display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--text-dim); }
+.legend-dot{ width:9px; height:9px; border-radius:2px; }
+.state-list{ display:flex; flex-direction:column; }
+.state-row{ display:grid; grid-template-columns:90px 1fr 70px; align-items:center; gap:12px; padding:11px 0; border-top:1px solid var(--panel-border); }
+.state-row:first-child{ border-top:none; }
+.state-name{ font-size:13.5px; font-weight:500; }
+.bar-track{ height:7px; background:var(--bg-elevated); border-radius:4px; overflow:hidden; }
+.bar-fill{ height:100%; background:linear-gradient(90deg, var(--leaf-dim), var(--fire)); border-radius:4px; transition: width 1s var(--ease); }
+.state-pct{ font-family:var(--font-mono); font-size:12.5px; text-align:right; color:var(--text-dim); }
+.source-note{ font-size:11.5px; color:var(--text-faint); margin-top:14px; line-height:1.6; }
+
+@media (max-width:900px){ .defor-grid{ grid-template-columns:1fr; } }
+
+/* ---------- CLIMA / HIDRO ---------- */
+.climate-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px; }
+.metric-card{ background:var(--bg-elevated); border:1px solid var(--panel-border); border-radius:var(--radius-m); padding:18px; }
+.metric-card .metric-icon{ font-size:20px; opacity:.8; }
+.metric-card .num{ font-size:26px; font-weight:600; margin-top:10px; display:block; }
+.metric-card .lbl{ font-size:12px; color:var(--text-dim); margin-top:2px; }
+#climChart, #hydroChart{ width:100%; height:220px; }
+.split{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px; }
+
+@media (max-width:900px){ .climate-grid{ grid-template-columns:repeat(2,1fr); } .split{ grid-template-columns:1fr; } }
+
+/* ---------- METODOLOGIA ---------- */
+.method-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.method-card{ padding:22px; border-radius:var(--radius-m); background:var(--bg-elevated); border:1px solid var(--panel-border); }
+.method-card .num-tag{ font-family:var(--font-mono); font-size:12px; color:var(--leaf); }
+.method-card h3{ font-size:17px; margin:10px 0 8px; }
+.method-card p{ font-size:13.5px; color:var(--text-dim); line-height:1.6; }
+@media (max-width:900px){ .method-grid{ grid-template-columns:1fr; } }
+
+/* ---------- TOAST ---------- */
+.status-toast{
+  position:fixed; bottom:20px; right:20px; z-index:200;
+  background:var(--panel); border:1px solid var(--panel-border); border-radius:var(--radius-m);
+  padding:12px 16px; font-size:12.5px; color:var(--text-dim); max-width:280px;
+  transform:translateY(120%); transition:transform .4s var(--ease); box-shadow:0 12px 30px rgba(0,0,0,.4);
+}
+.status-toast.show{ transform:translateY(0); }
+
+.leaflet-popup-content-wrapper{ background:var(--panel); color:var(--text); border-radius:10px; }
+.leaflet-popup-tip{ background:var(--panel); }
+.fpop{ font-family:var(--font-mono); font-size:12px; line-height:1.6; }
+.fpop b{ color:var(--fire); }

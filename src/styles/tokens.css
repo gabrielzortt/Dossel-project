@@ -1,0 +1,24 @@
+:root{
+  --bg: #0A120E;
+  --bg-elevated: #101A14;
+  --panel: #131F19;
+  --panel-border: rgba(140,168,150,0.14);
+  --canopy: #16261D;
+  --text: #EAF1EA;
+  --text-dim: #93A69B;
+  --text-faint: #5E7268;
+  --fire: #FF6A39;
+  --fire-dim: #7A3822;
+  --leaf: #5FBE8B;
+  --leaf-dim: #2C4C3B;
+  --river: #3E9BC4;
+  --river-dim: #244E60;
+  --amber: #E8B94E;
+  --radius-s: 8px;
+  --radius-m: 14px;
+  --radius-l: 22px;
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --ease: cubic-bezier(.16,.84,.44,1);
+}
