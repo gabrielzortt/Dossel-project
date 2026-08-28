@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dossel — Monitoramento por Satélite da Amazônia</title>
+<meta name="description" content="Painel de monitoramento em tempo real de queimadas, desmatamento, clima e hidrologia na Amazônia Legal, com dados de satélite NASA FIRMS, INPE e Open-Meteo.">
+<meta property="og:title" content="Dossel — Monitoramento por Satélite da Amazônia">
+<meta property="og:description" content="Focos de calor, desmatamento, clima e nível dos rios em tempo real.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="./assets/index-CrjtU5Ha.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DllvuXoP.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Dossel</div>
+    <nav class="nav-links" aria-label="Navegação principal">
+      <a href="#queimadas">Queimadas</a>
+      <a href="#desmatamento">Desmatamento</a>
+      <a href="#clima">Clima &amp; Rios</a>
+      <a href="#metodologia">Metodologia</a>
+    </nav>
+    <div class="nav-status">
+      <span class="dot live" aria-hidden="true"></span>
+      <span id="clockLabel">—</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <span class="canopy-layer l1" aria-hidden="true"></span>
+    <span class="canopy-layer l2" aria-hidden="true"></span>
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow"><span class="dot live"></span>Dados de satélite em tempo real</p>
+        <h1>A Amazônia, <em>vista de cima</em>, atualizada agora.</h1>
+        <p class="lede">Dossel cruza focos de calor do NASA FIRMS, séries históricas de desmatamento do INPE/PRODES e dados climáticos e hidrológicos abertos para acompanhar a Amazônia Legal em um só painel.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="ctaRefresh">Atualizar dados agora</button>
+          <a class="btn btn-ghost" href="#metodologia">Como os dados são coletados</a>
+        </div>
+      </div>
+      <div class="ticker-card">
+        <p class="eyebrow">Resumo — Amazônia Legal</p>
+        <div class="ticker-row">
+          <span class="ticker-label">Focos de calor (24h)</span>
+          <span class="ticker-value fire num" id="tickFires">—</span>
+        </div>
+        <div class="ticker-row">
+          <span class="ticker-label">Área desmatada (ano corrente, km²)</span>
+          <span class="ticker-value leaf num" id="tickDefor">—</span>
+        </div>
+        <div class="ticker-row">
+          <span class="ticker-label">Temp. média — Manaus</span>
+          <span class="ticker-value num" id="tickTemp">—</span>
+        </div>
+        <div class="ticker-row">
+          <span class="ticker-label">Vazão Rio Negro (m³/s, est.)</span>
+          <span class="ticker-value river num" id="tickRiver">—</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ===================== QUEIMADAS ===================== -->
+  <section id="queimadas">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Painel 01 — VIIRS / MODIS</p>
+          <h2>Focos de calor por satélite</h2>
+          <p>Detecções térmicas dos últimos 1 a 7 dias via NASA FIRMS (Fire Information for Resource Management System), plotadas sobre a Amazônia Legal.</p>
+        </div>
+        <select class="pill-select" id="firePeriod" aria-label="Período de focos de calor">
+          <option value="1">Últimas 24 horas</option>
+          <option value="2">Últimos 2 dias</option>
+          <option value="3" selected>Últimos 3 dias</option>
+          <option value="7">Últimos 7 dias</option>
+        </select>
+      </div>
+
+      <div class="panel reveal">
+        <div class="fire-grid">
+          <div>
+            <div id="firemap"></div>
+            <p id="yoyCompare">Carregando comparativo com o ano passado…</p>
+          </div>
+          <div class="stat-stack">
+            <div class="stat-box">
+              <div class="gauge-wrap">
+                <svg id="riskGauge" viewBox="0 0 100 55" width="96" height="52"></svg>
+                <div>
+                  <div class="gauge-value" id="riskValue">—</div>
+                  <div class="gauge-label" id="riskLabel">Índice de risco de queimada</div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-box">
+              <span class="num" id="fireTotal" style="color:var(--fire)">—</span>
+              <div class="lbl">Focos detectados no período</div>
+            </div>
+            <div class="stat-box">
+              <span class="num" id="fireHighConf">—</span>
+              <div class="lbl">Confiança alta (&gt;80%)</div>
+            </div>
+            <div class="stat-box">
+              <span class="num" id="fireTopState">—</span>
+              <div class="lbl">Estado com mais focos</div>
+            </div>
+            <div class="key-setup" id="keySetup" style="display:none;">
+              <strong style="color:var(--text)">Usando a chave gratuita padrão do projeto.</strong> Se o limite de requisições for atingido, gere sua própria MAP_KEY em
+              <a href="https://firms.modaps.eosdis.nasa.gov/api/map_key/" target="_blank" rel="noopener">firms.modaps.eosdis.nasa.gov/api/map_key</a> e cole abaixo — fica salva só no seu navegador.
+              <div class="key-row">
+                <input type="text" class="field-key" id="firmsKeyInput" placeholder="Sua MAP_KEY">
+                <button class="btn btn-ghost" id="saveKeyBtn" style="padding:8px 16px;">Salvar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ===================== DESMATAMENTO ===================== -->
+  <section id="desmatamento">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Painel 02 — PRODES / INPE</p>
+          <h2>Série histórica de desmatamento</h2>
+          <p>Área desmatada anual (km²) na Amazônia Legal e distribuição por estado, com base nos dados consolidados do PRODES/INPE.</p>
+        </div>
+      </div>
+
+      <div class="defor-grid">
+        <div class="panel reveal">
+          <div class="panel-head">
+            <span class="panel-title">Km² desmatados por ano</span>
+          </div>
+          <canvas id="deforChart"></canvas>
+          <div class="legend-row">
+            <div class="legend-item"><span class="legend-dot" style="background:var(--leaf-dim)"></span>Dentro da média histórica</div>
+            <div class="legend-item"><span class="legend-dot" style="background:var(--fire)"></span>Acima da média histórica</div>
+          </div>
+          <p class="source-note">Fonte: INPE/PRODES, dados consolidados mais recentes disponíveis. O ano corrente é estimado por alertas DETER até a atualização deste painel — consulte <a href="https://terrabrasilis.dpi.inpe.br" target="_blank" rel="noopener" style="color:var(--text-dim)">terrabrasilis.dpi.inpe.br</a> para o dado oficial mais recente.</p>
+        </div>
+
+        <div class="panel reveal">
+          <div class="panel-head">
+            <span class="panel-title">Participação por estado</span>
+          </div>
+          <div class="state-list" id="stateList"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ===================== CLIMA & HIDROLOGIA ===================== -->
+  <section id="clima">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Painel 03 — Open-Meteo</p>
+          <h2>Clima e hidrologia</h2>
+          <p>Temperatura, precipitação e vazão estimada dos rios para os principais polos da Amazônia Legal.</p>
+        </div>
+        <select class="pill-select" id="citySelect" aria-label="Selecionar cidade">
+          <option value="manaus" data-lat="-3.10" data-lon="-60.02">Manaus, AM</option>
+          <option value="belem" data-lat="-1.46" data-lon="-48.50">Belém, PA</option>
+          <option value="riobranco" data-lat="-9.97" data-lon="-67.82">Rio Branco, AC</option>
+          <option value="santarem" data-lat="-2.44" data-lon="-54.71">Santarém, PA</option>
+          <option value="portovelho" data-lat="-8.76" data-lon="-63.90">Porto Velho, RO</option>
+        </select>
+      </div>
+
+      <div class="climate-grid reveal">
+        <div class="metric-card"><span class="metric-icon">🌡️</span><span class="num" id="mTemp">—</span><div class="lbl">Temperatura atual</div></div>
+        <div class="metric-card"><span class="metric-icon">💧</span><span class="num" id="mHumidity">—</span><div class="lbl">Umidade relativa</div></div>
+        <div class="metric-card"><span class="metric-icon">🌧️</span><span class="num" id="mPrecip">—</span><div class="lbl">Chuva acumulada (24h)</div></div>
+        <div class="metric-card"><span class="metric-icon">🌊</span><span class="num" id="mDischarge">—</span><div class="lbl">Vazão do rio (m³/s, est.)</div></div>
+      </div>
+
+      <div class="split">
+        <div class="panel reveal">
+          <div class="panel-head"><span class="panel-title">Precipitação — 7 dias</span></div>
+          <canvas id="climChart"></canvas>
+        </div>
+        <div class="panel reveal">
+          <div class="panel-head"><span class="panel-title">Vazão estimada do rio — 14 dias</span></div>
+          <canvas id="hydroChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ===================== METODOLOGIA ===================== -->
+  <section id="metodologia">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Metodologia</p>
+          <h2>De onde vêm os números</h2>
+        </div>
+      </div>
+      <div class="method-grid">
+        <div class="method-card reveal">
+          <span class="num-tag">FOGO</span>
+          <h3>NASA FIRMS</h3>
+          <p>Detecções térmicas dos sensores VIIRS (Suomi-NPP/NOAA-20) via API pública da NASA, atualizadas a cada poucas horas. O comparativo ano a ano usa a fonte histórica padrão da mesma API.</p>
+        </div>
+        <div class="method-card reveal">
+          <span class="num-tag">FLORESTA</span>
+          <h3>INPE / PRODES &amp; DETER</h3>
+          <p>PRODES mede o desmatamento consolidado por corte raso uma vez por ano; DETER emite alertas diários usados como estimativa do ano corrente até a consolidação oficial.</p>
+        </div>
+        <div class="method-card reveal">
+          <span class="num-tag">CLIMA</span>
+          <h3>Open-Meteo</h3>
+          <p>Reanálise e previsão numérica de código aberto, combinando modelos meteorológicos globais e regionais, incluindo a API de vazão de rios (Global Flood Awareness System).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div class="brand" style="font-size:15px;"><span class="brand-mark" aria-hidden="true" style="width:18px;height:18px;"></span>Dossel</div>
+    <p>Painel de monitoramento independente. Dados de satélite: NASA FIRMS, INPE/PRODES-DETER, Open-Meteo. Não substitui boletins oficiais.</p>
+  </div>
+</footer>
+
+<div class="status-toast" id="statusToast" role="status" aria-live="polite"></div>
+
+</body>
+</html>
